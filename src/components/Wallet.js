@@ -1,15 +1,18 @@
 
-import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+
+import { depositMoney, withdrawMoney } from "../redux/actions/walletActionCreators";
 
 const Wallet = () => {
-  const [amount, setAmount] = useState(0);
+  const wallet = useSelector(state => state.wallet);
+  const dispatch = useDispatch();
 
   function handleDeposit() {
-    setAmount(amount => amount + 10)
+    dispatch(depositMoney(10));
   }
 
   function handleWithdraw() {
-    setAmount(amount => amount - 10)
+    dispatch(withdrawMoney(10));
   }
 
   return (
@@ -22,7 +25,7 @@ const Wallet = () => {
               <button type="button" className="btn btn-success mb-1" onClick={handleDeposit}>Deposit $10</button>
               <button type="button" className="btn btn-danger mt-1" onClick={handleWithdraw}>Withdraw $10</button>
             </div>
-            <h3>${amount}</h3>
+            <h3>${wallet}</h3>
           </div>
         </div>
       </div>

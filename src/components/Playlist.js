@@ -1,14 +1,22 @@
 import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+
+import { addSong, removeSong, removeAllSongs } from "../redux/actions/playlistActionCreators"
 
 
 const Playlist = () => {
-  const [songs, setSongs] = useState(["Take Five", "Claire de Lune"]);
+  const playlist = useSelector(state => state.playlist);
+  const dispatch = useDispatch();
+
   const [selectedSongIndex, setSelectedSongIndex] = useState(null);
   const [songTitle, setSongTitle] = useState("");
 
   function handleSubmit(e) {
     e.preventDefault();
-    setSongs(songs => [...songs, songTitle.trim()]);
+    const title = songTitle.trim();
+    if (title !== "") {
+      dispatch(addSong(title));
+    }
     setSongTitle("");
   }
 
@@ -18,12 +26,12 @@ const Playlist = () => {
   }
 
   function handleRemove() {
-    setSongs(songs => songs.filter((song, index) => index !== selectedSongIndex));
+    dispatch(removeSong(selectedSongIndex));
     setSelectedSongIndex(null);
   }
 
   function handleRemoveAll() {
-    setSongs([]);
+    dispatch(removeAllSongs());
     setSelectedSongIndex(null);
   }
 
@@ -62,7 +70,7 @@ const Playlist = () => {
         </div>
         <div className="col-md-6">
           <ul className="list-group mt-5">
-            {songs.map((song, index) => (
+            {playlist.map((song, index) => (
               <li
                 key={index}
                 className={`list-group-item ${index === selectedSongIndex ? "active" : ""}`}
@@ -74,7 +82,7 @@ const Playlist = () => {
             ))}
           </ul>
           {
-            (songs && songs.length > 0 && selectedSongIndex === null) && (
+            (playlist && playlist.length > 0 && selectedSongIndex === null) && (
               <button
                 type="button"
                 className="btn btn-danger d-block ms-auto my-2"
